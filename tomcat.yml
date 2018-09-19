@@ -1,8 +1,12 @@
 ---
-# site.yml: master playbook for deploying Banner 9 Tomcat Instances
+#
 
 - hosts: all
   remote_user: vagrant
+  vars:
+    clienthome: "{{ lookup('vars', ansible_limit + '_vars').clienthome }}"
+    servicehostport: "{{ lookup('vars', ansible_limit + '_vars').servicehostport }}"
+    apphostport: "{{ lookup('vars', ansible_limit + '_vars').apphostport }}"
 
   roles:
     - tomcat
