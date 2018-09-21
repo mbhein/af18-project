@@ -1,9 +1,9 @@
 localhost
 
-[tower]
+[tower-servers]
 tower ansible_host=192.168.80.20
 
-[jenkins]
+[jenkins-servers]
 jenkins ansible_host=192.168.80.40
 
 [centos7]
