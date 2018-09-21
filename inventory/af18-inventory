@@ -1,0 +1,11 @@
+localhost
+
+[tower]
+tower ansible_host=192.168.80.20
+
+[jenkins]
+jenkins ansible_host=192.168.80.40
+
+[centos7]
+app1s01 ansible_host=192.168.80.31
+app2s02 ansible_host=192.168.80.32
