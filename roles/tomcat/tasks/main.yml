@@ -6,11 +6,15 @@
   yum:
     name: java-1.8.0-openjdk.x86_64
     state: latest
+  tags:
+    ds
 
 - name: Create the Tomcat Group
   group:
     name: tomcat
     state: present
+  tags:
+    ds
 
 - name: Create the Tomcat User
   user:
@@ -18,18 +22,26 @@
     home: "{{ var_TomcatHome }}"
     group: "{{ var_TomcatGroup }}"
     shell: /bin/bash state=present
+  tags:
+    ds
 
 - name: Set Tomcat Dir Owner
   file: path={{ var_TomcatHome }} mode=0754 owner={{ var_TomcatUser }} group={{ var_TomcatGroup }} state=directory
+  tags:
+    ds
 
 - name: Download Tomcat from specificed URL
   get_url:
     url: "{{ var_TomcatDownloadURL }}"
     dest: "{{ var_TomcatHome }}/{{ var_TomcatArchiveFile}}"
+  tags:
+    ds
 
 - name:  Client {{ var_Client }} -  Stat Tomcat Dir
   stat: path={{ var_TomcatHome }}/{{ var_TomcatClientDir }}
   register: check_TomcatClientDir
+  tags:
+    ds
 
 - name:  Client {{ var_Client }} -  Unarchive Tomcat
   unarchive:
@@ -37,24 +49,62 @@
     dest: "{{ var_TomcatHome }}"
     remote_src: yes
   when: check_TomcatClientDir.stat.exists == false
+  tags:
+    ds
 
 - name:  Client {{ var_Client }} -  Copy unpacked Tomcat to Tomcat Client {{ var_Client }} dir
   command: mv {{ var_TomcatArchiveDir }} {{ var_TomcatHome }}/{{ var_TomcatClientDir }}
   when: check_TomcatClientDir.stat.exists == false
+  tags:
+    ds
 
 - name:  Client {{ var_Client }} -  Set Tomcat Client {{ var_Client }} Dir Owner
   file: path={{ var_TomcatHome }}/{{ var_TomcatClientDir }} mode=0754 owner={{ var_TomcatUser }} group={{ var_TomcatGroup }} recurse=yes state=directory
+  tags:
+    ds
 
 - name:  Client {{ var_Client }} -  Template Tomcat server.xml
   template: src=templates/server.xml.j2 dest={{ var_TomcatHome }}/{{ var_TomcatClientDir }}/conf/server.xml owner={{ var_TomcatUser }} group={{ var_TomcatGroup }} mode=0744
+  tags:
+    ds
 
 - name:  Client {{ var_Client }} -  Template Tomcat Service
   template: src=templates/tomcat.service.j2 dest=/etc/systemd/system/tomcat-{{ var_Client}}.service owner=root group=root mode=0755
+  tags:
+    ds
 
 - name:  Client {{ var_Client }} -  Enable Tomcat Service
   systemd: daemon_reload=yes name=tomcat-{{ var_Client}}.service enabled=yes
+  tags:
+    ds
+
+
+- name: "Stop Client {{ var_Client }} Tomcat"
+  debug:
+    msg: "Stopping Client {{ var_Client }} Tomcat"
+  changed_when: True
   notify:
-    - Restart Client Tomcat
+    - handler_tomcat_stop
+  tags:
+    stop_tomcat
+
+- name: "Start Client {{ var_Client }} Tomcat"
+  debug:
+    msg: "Starting Client {{ var_Client }} Tomcat"
+  changed_when: True
+  notify:
+    - handler_perf_tomcat_start
+  tags:
+    start_tomcat
+
+- name: "Restart Client {{ var_Client }} Tomcat"
+  debug:
+    msg: "Restart Client {{ var_Client }} Tomcat"
+  changed_when: True
+  notify:
+    - handler_tomcat_restart
+  tags:
+    restart_tomcat
 
 
 ...

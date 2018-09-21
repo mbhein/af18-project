@@ -1,10 +1,19 @@
 ---
 
 #handlers:
-- name: Restart Client Tomcat
+- name: handler_tomcat_restart
   service:
     name: "tomcat-{{ var_Client }}"
     state: restarted
 
+- name: handler_tomcat_stop
+  service:
+    name: "tomcat-{{ var_Client }}"
+    state: stopped
+
+- name: handler_tomcat_start
+  service:
+    name: "tomcat-{{ var_Client }}"
+    state: started
 
 ...
