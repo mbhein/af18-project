@@ -93,7 +93,7 @@
     msg: "Starting Client {{ var_Client }} Tomcat"
   changed_when: True
   notify:
-    - handler_perf_tomcat_start
+    - handler_tomcat_start
   tags:
     start_tomcat
 
