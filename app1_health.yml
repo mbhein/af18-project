@@ -1,0 +1,46 @@
+---
+#
+
+- hosts: all
+  remote_user: vagrant
+  vars:
+    clienthome: "{{ lookup('vars', ansible_limit + '_vars').clienthome }}"
+    servicehostport: "{{ lookup('vars', ansible_limit + '_vars').servicehostport }}"
+    apphostport: "{{ lookup('vars', ansible_limit + '_vars').apphostport }}"
+
+  tasks:
+
+  - name: Get App1 Status
+    block:
+    - name: Connect to App1
+      uri:
+        url: "http://{{ inventory_hostname }}:{{ apphostport }}"
+        method: GET
+      register: "app1_status"
+      delegate_to: localhost
+
+    rescue:
+      - name: Restart tomcat
+        service:
+          name: "tomcat-{{ clienthome }}"
+          state: restarted
+        become: yes
+
+      - name: sleep for 120 seconds
+        wait_for:
+          timeout: 120
+        delegate_to: localhost
+
+      - name: Connect to App1
+        uri:
+          url: "http://{{ inventory_hostname }}:{{ apphostport }}"
+          method: GET
+        register: "app1_status"
+        delegate_to: localhost
+
+    always:
+      - name: debug app1_status
+        debug:
+          msg: "{{ app1_status }}"
+
+...
