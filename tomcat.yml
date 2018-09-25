@@ -4,9 +4,9 @@
 - hosts: all
   remote_user: vagrant
   vars:
-    clienthome: "{{ lookup('vars', ansible_limit + '_vars').clienthome }}"
-    servicehostport: "{{ lookup('vars', ansible_limit + '_vars').servicehostport }}"
-    apphostport: "{{ lookup('vars', ansible_limit + '_vars').apphostport }}"
+    clientHome: "{{ lookup('vars', ansible_limit + '_vars').clientHome }}"
+    serviceHostPort: "{{ lookup('vars', ansible_limit + '_vars').serviceHostPort }}"
+    appHostPort: "{{ lookup('vars', ansible_limit + '_vars').appHostPort }}"
 
   roles:
     - tomcat

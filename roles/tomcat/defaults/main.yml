@@ -9,8 +9,8 @@ var_TomcatDownloadURL: 'http://archive.apache.org/dist/tomcat/tomcat-8/v8.5.15/b
 var_TomcatArchiveFile: 'apache-tomcat-8.5.15.tar.gz'
 var_TomcatArchiveDir: '{{ var_TomcatHome }}/apache-tomcat-8.5.15'
 
-var_Client: '{{ clienthome }}'
-var_TomcatClientDir: '{{ clienthome }}'
+var_Client: '{{ clientHome }}'
+var_TomcatClientDir: '{{ clientHome }}'
 
 
 
@@ -19,8 +19,8 @@ var_TomcatStatusPwd: 'ansible'
 var_TomcatAdminUser: 'tomcat_admin'
 var_TomcatAdminPwd: 'ansible'
 
-var_TomcatServerPort: '{{ servicehostport }}'
-var_TomcatHTTPPort: '{{ apphostport }}'
+var_TomcatServerPort: '{{ serviceHostPort }}'
+var_TomcatHTTPPort: '{{ appHostPort }}'
 
 
 var_firewalld:

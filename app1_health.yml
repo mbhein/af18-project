@@ -4,9 +4,9 @@
 - hosts: all
   remote_user: vagrant
   vars:
-    clienthome: "{{ lookup('vars', ansible_limit + '_vars').clienthome }}"
-    servicehostport: "{{ lookup('vars', ansible_limit + '_vars').servicehostport }}"
-    apphostport: "{{ lookup('vars', ansible_limit + '_vars').apphostport }}"
+    clientHome: "{{ lookup('vars', ansible_limit + '_vars').clientHome }}"
+    serviceHostPort: "{{ lookup('vars', ansible_limit + '_vars').serviceHostPort }}"
+    appHostPort: "{{ lookup('vars', ansible_limit + '_vars').appHostPort }}"
 
   tasks:
 
@@ -14,7 +14,7 @@
     block:
     - name: Connect to App1
       uri:
-        url: "http://{{ inventory_hostname }}:{{ apphostport }}"
+        url: "http://{{ inventory_hostname }}:{{ appHostPort }}"
         method: GET
       register: "app1_status"
       delegate_to: localhost
@@ -22,7 +22,7 @@
     rescue:
       - name: Restart tomcat
         service:
-          name: "tomcat-{{ clienthome }}"
+          name: "tomcat-{{ clientHome }}"
           state: restarted
         become: yes
 
@@ -33,7 +33,7 @@
 
       - name: Connect to App1
         uri:
-          url: "http://{{ inventory_hostname }}:{{ apphostport }}"
+          url: "http://{{ inventory_hostname }}:{{ appHostPort }}"
           method: GET
         register: "app1_status"
         delegate_to: localhost
