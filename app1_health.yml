@@ -26,9 +26,9 @@
           state: restarted
         become: yes
 
-      - name: sleep for 120 seconds
+      - name: sleep for 10 seconds
         wait_for:
-          timeout: 120
+          timeout: 10
         delegate_to: localhost
 
       - name: Connect to App1
