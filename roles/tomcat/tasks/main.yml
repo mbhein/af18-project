@@ -59,22 +59,41 @@
     ds
 
 - name:  Client {{ var_Client }} -  Set Tomcat Client {{ var_Client }} Dir Owner
-  file: path={{ var_TomcatHome }}/{{ var_TomcatClientDir }} mode=0754 owner={{ var_TomcatUser }} group={{ var_TomcatGroup }} recurse=yes state=directory
+  file:
+    path: "{{ var_TomcatHome }}/{{ var_TomcatClientDir }}"
+    mode: 0754
+    owner: "{{ var_TomcatUser }}"
+    group: "{{ var_TomcatGroup }}"
+    recurse: yes
+    state: directory
   tags:
     ds
 
 - name:  Client {{ var_Client }} -  Template Tomcat server.xml
-  template: src=templates/server.xml.j2 dest={{ var_TomcatHome }}/{{ var_TomcatClientDir }}/conf/server.xml owner={{ var_TomcatUser }} group={{ var_TomcatGroup }} mode=0744
+  template:
+    src: templates/server.xml.j2
+    dest: "{{ var_TomcatHome }}/{{ var_TomcatClientDir }}/conf/server.xml"
+    owner: "{{ var_TomcatUser }}"
+    group: "{{ var_TomcatGroup }}"
+    mode: 0744
   tags:
     ds
 
 - name:  Client {{ var_Client }} -  Template Tomcat Service
-  template: src=templates/tomcat.service.j2 dest=/etc/systemd/system/tomcat-{{ var_Client}}.service owner=root group=root mode=0755
+  template:
+    src: templates/tomcat.service.j2
+    dest: "/etc/systemd/system/tomcat-{{ var_Client}}.service"
+    owner: root
+    group: root
+    mode: 0755
   tags:
     ds
 
 - name:  Client {{ var_Client }} -  Enable Tomcat Service
-  systemd: daemon_reload=yes name=tomcat-{{ var_Client}}.service enabled=yes
+  systemd:
+    daemon_reload: yes
+    name: "tomcat-{{ var_Client}}.service"
+    enabled: yes
   tags:
     ds
 
