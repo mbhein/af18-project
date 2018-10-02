@@ -1,8 +1,9 @@
 ---
-#
+#playbook
 
 - hosts: all
   remote_user: vagrant
+  gather_facts: no
   vars:
     clientHome: "{{ lookup('vars', ansible_limit + '_vars').clientHome }}"
     serviceHostPort: "{{ lookup('vars', ansible_limit + '_vars').serviceHostPort }}"
